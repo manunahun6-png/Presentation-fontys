@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Marketing at Indie Campers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          #F7F6F2;
+      --white:       #FFFFFF;
+      --navy:        #16162A;
+      --navy-mid:    #3E3E60;
+      --accent:      #FF5C2B;
+      --accent-soft: #FFF0EB;
+      --muted:       #8888AA;
+      --border:      #E8E7F2;
+      --radius:      14px;
+      --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--navy);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SCROLL CONTAINER ── */
+    #deck {
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    /* ── EACH SLIDE ── */
+    .slide {
+      min-height: 100vh;
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(28px, 5vw, 64px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: min(88vw, 1060px);
+      position: relative;
+      z-index: 1;
+      text-align: left;
+    }
+
+    /* ── BACKGROUNDS ── */
+    .bg-warm  { background: var(--bg); }
+    .bg-white { background: var(--white); }
+    .bg-dark  { background: var(--navy); }
+
+    /* subtle blob for intro & conclusion */
+    .bg-blob::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 45% at 80% 20%, rgba(255,92,43,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 15% 85%, rgba(255,92,43,.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ── LABELS / EYEBROW ── */
+    .label {
+      font-size: clamp(10px, 1.1vw, 12px);
+      font-weight: 600;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: clamp(8px, 1.4vh, 14px);
+    }
+
+    /* ── HEADINGS ── */
+    h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(34px, 5.8vw, 68px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -.02em;
+      color: var(--navy);
+      margin-bottom: clamp(14px, 2vh, 22px);
+    }
+
+    h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(26px, 4.2vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.015em;
+      color: var(--navy);
+      margin-bottom: clamp(10px, 1.8vh, 18px);
+    }
+
+    .dark-slide h2 { color: var(--white); }
+
+    .deck-sub {
+      font-size: clamp(14px, 1.7vw, 17px);
+      color: var(--navy-mid);
+      line-height: 1.65;
+      max-width: 580px;
+    }
+    .dark-slide .deck-sub { color: rgba(255,255,255,.6); }
+
+    /* ── INTRO BADGE ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 6px 16px 6px 10px;
+      font-size: clamp(11px, 1.2vw, 13px);
+      font-weight: 500;
+      color: var(--navy-mid);
+      margin-bottom: clamp(16px, 2.5vh, 26px);
+    }
+    .badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    /* ── BULLETS ── */
+    .bullets {
+      list-style: none;
+      margin: clamp(16px, 2.8vh, 26px) 0;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 1.6vh, 15px);
+    }
+    .bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: clamp(13px, 1.55vw, 15.5px);
+      line-height: 1.6;
+      color: var(--navy-mid);
+    }
+    .bullets li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+    .bullets li strong { color: var(--navy); font-weight: 400; }
+
+    /* ── TAKEAWAY ── */
+    .takeaway {
+      border-left: 3px solid var(--accent);
+      padding: clamp(10px, 1.4vh, 14px) clamp(14px, 2vw, 20px);
+      background: var(--accent-soft);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: clamp(12px, 1.4vw, 14.5px);
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.55;
+      margin-top: clamp(16px, 2.2vh, 22px);
+    }
+    .dark-slide .takeaway {
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.9);
+    }
+
+    /* ── PROOF LINK ── */
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: clamp(11px, 1.2vw, 13px);
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 10px;
+      padding-bottom: 1px;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s;
+    }
+    .proof-link:hover { border-bottom-color: var(--accent); }
+    .proof-link .arrow { font-style: normal; }
+
+    /* ── SPLIT LAYOUT ── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(28px, 5vw, 60px);
+      align-items: center;
+    }
+
+    .slide-img {
+      width: 100%;
+      max-width: 460px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 50px rgba(0,0,0,.13);
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ── OVERVIEW CARDS ── */
+    .ov-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(12px, 1.8vw, 18px);
+      margin-top: clamp(20px, 3vh, 30px);
+    }
+
+    .ov-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(16px, 2.2vw, 24px);
+      transition: box-shadow .25s, transform .25s;
+    }
+    .ov-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,.07);
+      transform: translateY(-2px);
+    }
+    .ov-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(10px, 1.1vw, 12px);
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .1em;
+      margin-bottom: 8px;
+    }
+    .ov-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(13px, 1.6vw, 17px);
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .ov-card p {
+      font-size: clamp(11.5px, 1.3vw, 13.5px);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ── CONCLUSION CARDS ── */
+    .con-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: clamp(12px, 1.8vw, 18px);
+      margin-top: clamp(20px, 3vh, 30px);
+    }
+    .con-card {
+      background: rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: clamp(16px, 2.2vw, 24px);
+      border-top: 3px solid var(--accent);
+    }
+    .con-card h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(14px, 1.6vw, 17px);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .con-card p {
+      font-size: clamp(12px, 1.3vw, 13.5px);
+      color: rgba(255,255,255,.5);
+      line-height: 1.55;
+    }
+
+    /* ── SLIDE NUMBER ── */
+    .slide-num {
+      position: absolute;
+      bottom: clamp(14px, 2vh, 22px);
+      right: clamp(20px, 3vw, 36px);
+      font-size: 11px;
+      letter-spacing: .05em;
+      color: var(--muted);
+    }
+    .dark-slide .slide-num { color: rgba(255,255,255,.25); }
+
+    /* ── NAV DOTS ── */
+    #nav-dots {
+      position: fixed;
+      right: clamp(12px, 1.8vw, 22px);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      z-index: 200;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: var(--border);
+      padding: 0;
+      transition: background .25s, transform .25s;
+    }
+    .dot.on {
+      background: var(--accent);
+      transform: scale(1.5);
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .r {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .65s var(--ease), transform .65s var(--ease);
+    }
+    .r.in { opacity: 1; transform: none; }
+    .d1 { transition-delay: .08s; }
+    .d2 { transition-delay: .18s; }
+    .d3 { transition-delay: .28s; }
+    .d4 { transition-delay: .38s; }
+    .d5 { transition-delay: .48s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .r { opacity: 1; transform: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .split { grid-template-columns: 1fr; gap: 24px; }
+      .img-left { order: -1; }
+      .ov-grid { grid-template-columns: 1fr; }
+      .con-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      #nav-dots { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 1 · INTRODUCTION
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-warm bg-blob" id="s1">
+    <div class="slide-inner">
+      <div class="badge r"><span class="badge-dot"></span> Entrepreneurship Presentation</div>
+      <div class="label r d1">Introduction</div>
+      <h1 class="r d2">Digital Marketing<br>at Indie Campers</h1>
+      <p class="deck-sub r d3">
+        During my internship at Indie Campers, I worked in the Organic Social team — managing Instagram, TikTok, and YouTube. This presentation shows how I applied four key business and marketing concepts through real work.
+      </p>
+      <div class="takeaway r d4">
+        From content creation to performance reporting — every action was connected to a clear business goal.
+      </div>
+    </div>
+    <span class="slide-num">01 / 07</span>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 2 · OVERVIEW
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-white" id="s2">
+    <div class="slide-inner">
+      <div class="label r">Overview</div>
+      <h2 class="r d1">4 Areas of Work</h2>
+      <p class="deck-sub r d2">Each area shows a different layer of how social media connects to real business results.</p>
+      <div class="ov-grid">
+        <div class="ov-card r d2">
+          <div class="ov-num">01</div>
+          <h3>Setting Strategic Direction</h3>
+          <p>Defining quarterly goals from data, tracking progress, and refining strategy based on what the numbers show.</p>
+        </div>
+        <div class="ov-card r d3">
+          <div class="ov-num">02</div>
+          <h3>Creating Value</h3>
+          <p>Producing content that aligns with business campaigns and drives organic awareness — without paid ads.</p>
+        </div>
+        <div class="ov-card r d3">
+          <div class="ov-num">03</div>
+          <h3>Business Development</h3>
+          <p>Using UTM links and analytics to track how social content translates into website visits and bookings.</p>
+        </div>
+        <div class="ov-card r d4">
+          <div class="ov-num">04</div>
+          <h3>Digital Project Scope</h3>
+          <p>Planning content weekly using a structured calendar aligned with trends, campaigns, and business priorities.</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-num">02 / 07</span>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 3 · SETTING STRATEGIC DIRECTION
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-warm" id="s3">
+    <div class="slide-inner split">
+      <div class="text-col">
+        <div class="label r">Setting Strategic Direction</div>
+        <h2 class="r d1">How I Set Goals<br>Using Data</h2>
+        <ul class="bullets">
+          <li class="r d2">Every quarter, I look at past results to understand what worked and what didn't</li>
+          <li class="r d2">I also check trends and seasonality to see how performance changes over time</li>
+          <li class="r d3">Based on this, I set clear goals for each platform</li>
+          <li class="r d3">During the quarter, I track results weekly and adjust if needed</li>
+        </ul>
+        <a href="https://indiecampers.netlify.app/" target="_blank" class="proof-link r d4">
+          <span class="arrow">↗</span> View live performance report
+        </a>
+        <div class="takeaway r d5">
+          I use data to plan, track, and improve our social media strategy over time.
+        </div>
+      </div>
+      <div class="r d3">
+        <img
+          src="Screenshot 2026-04-16 at 18.47.11.png"
+          alt="Q1 2026 Social Media Performance Report — Indie Campers dashboard showing Exceeded, Improving, and Below Target KPIs for January–March 2026"
+          class="slide-img"
+        >
+      </div>
+    </div>
+    <span class="slide-num">03 / 07</span>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 4 · CREATING VALUE
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-white" id="s4">
+    <div class="slide-inner split">
+      <div class="img-left r d1">
+        <img
+          src="dolomites post.png"
+          alt="Instagram carousel post — '7 Reasons to Road Trip in the Dolomites' with 248 likes, organically promoting a bookable destination"
+          class="slide-img"
+        >
+      </div>
+      <div class="text-col">
+        <div class="label r">Creating Value</div>
+        <h2 class="r d1">Creating Content That<br>Supports the Business</h2>
+        <ul class="bullets">
+          <li class="r d2">When the company wants to promote a location or campaign, I create content around it</li>
+          <li class="r d2">For example, this post promotes the Dolomites as a travel destination</li>
+          <li class="r d3">The goal is to inspire people and make them interested in booking</li>
+          <li class="r d3">All of this is done organically, without using paid ads</li>
+        </ul>
+        <div class="takeaway r d4">
+          I create content that helps the company reach its goals, not just get likes.
+        </div>
+      </div>
+    </div>
+    <span class="slide-num">04 / 07</span>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 5 · BUSINESS DEVELOPMENT
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-warm" id="s5">
+    <div class="slide-inner split">
+      <div class="text-col">
+        <div class="label r">Business Development</div>
+        <h2 class="r d1">Tracking What Actually<br>Brings Revenue</h2>
+        <ul class="bullets">
+          <li class="r d2">I use UTM links to track every post we publish</li>
+          <li class="r d2">This helps me see how people move from social media to the website</li>
+          <li class="r d3">I can also check if they complete a booking</li>
+          <li class="r d3">This allows us to understand which content is really working</li>
+        </ul>
+        <div class="takeaway r d4">
+          I don't just create content — I measure how it impacts the business.
+        </div>
+      </div>
+      <div class="r d3">
+        <img
+          src="utm links.png"
+          alt="UTM tracking spreadsheet showing structured links per Instagram post with source, medium, campaign name, and final booking URL columns"
+          class="slide-img"
+        >
+      </div>
+    </div>
+    <span class="slide-num">05 / 07</span>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 6 · DIGITAL PROJECT SCOPE
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-white" id="s6">
+    <div class="slide-inner split">
+      <div class="img-left r d1">
+        <img
+          src="content calendat.png"
+          alt="Master content calendar spreadsheet showing weekly post planning with date, platform, format, content pillar, captions, and campaign tags per entry"
+          class="slide-img"
+        >
+      </div>
+      <div class="text-col">
+        <div class="label r">Digital Project Scope</div>
+        <h2 class="r d1">Planning Content in<br>a Structured Way</h2>
+        <ul class="bullets">
+          <li class="r d2">At the start of each week, I create a content calendar</li>
+          <li class="r d2">Before that, I check trends and what is performing well</li>
+          <li class="r d3">I plan content based on both data and company priorities</li>
+          <li class="r d3">This helps keep everything organised and consistent</li>
+        </ul>
+        <div class="takeaway r d4">
+          Good planning makes content better and more effective.
+        </div>
+      </div>
+    </div>
+    <span class="slide-num">06 / 07</span>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       SLIDE 7 · CONCLUSION
+  ───────────────────────────────────────────── -->
+  <section class="slide bg-dark bg-blob dark-slide" id="s7">
+    <div class="slide-inner">
+      <div class="label r">Conclusion</div>
+      <h2 class="r d1">Strategy. Content. Impact.</h2>
+      <p class="deck-sub r d2">
+        Every part of this work connects: goals inform content, content drives traffic, and tracking proves the value. That loop is what makes social media a real business tool — not just a creative outlet.
+      </p>
+      <div class="con-grid">
+        <div class="con-card r d2">
+          <h4>Strategy</h4>
+          <p>Quarterly goals set from data, tracked in real time, and sharpened each cycle.</p>
+        </div>
+        <div class="con-card r d3">
+          <h4>Content</h4>
+          <p>Organic posts aligned with campaigns, destinations, and business priorities — no ads needed.</p>
+        </div>
+        <div class="con-card r d4">
+          <h4>Impact</h4>
+          <p>UTM links and analytics connect every post back to website visits and bookings.</p>
+        </div>
+      </div>
+      <div class="takeaway r d5">
+        Social media isn't just about reach — when done right, it directly supports business growth.
+      </div>
+    </div>
+    <span class="slide-num">07 / 07</span>
+  </section>
+
+</div>
+
+<!-- ── NAV DOTS ── -->
+<nav id="nav-dots" aria-label="Slide navigation"></nav>
+
+<script>
+  const deck   = document.getElementById('deck');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const navEl  = document.getElementById('nav-dots');
+  let current  = 0;
+
+  /* build dots */
+  slides.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'dot' + (i === 0 ? ' on' : '');
+    btn.setAttribute('aria-label', `Slide ${i + 1}`);
+    btn.addEventListener('click', () => go(i));
+    navEl.appendChild(btn);
+  });
+  const dots = Array.from(document.querySelectorAll('.dot'));
+
+  function go(i) { slides[i].scrollIntoView({ behavior: 'smooth' }); }
+
+  /* active dot sync */
+  const slideIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio >= 0.5) {
+        current = slides.indexOf(e.target);
+        dots.forEach((d, i) => d.classList.toggle('on', i === current));
+      }
+    });
+  }, { threshold: 0.5 });
+
+  /* reveal animations */
+  const revealIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  slides.forEach(s => slideIO.observe(s));
+  document.querySelectorAll('.r').forEach(el => revealIO.observe(el));
+
+  /* keyboard navigation */
+  document.addEventListener('keydown', e => {
+    if (['ArrowDown','ArrowRight',' '].includes(e.key)) {
+      e.preventDefault();
+      go(Math.min(current + 1, slides.length - 1));
+    } else if (['ArrowUp','ArrowLeft'].includes(e.key)) {
+      e.preventDefault();
+      go(Math.max(current - 1, 0));
+    }
+  });
+
+  /* touch / swipe */
+  let ty = 0;
+  deck.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
+  deck.addEventListener('touchend', e => {
+    const d = ty - e.changedTouches[0].clientY;
+    if (Math.abs(d) > 48) go(d > 0
+      ? Math.min(current + 1, slides.length - 1)
+      : Math.max(current - 1, 0));
+  }, { passive: true });
+</script>
+
+</body>
+</html>
