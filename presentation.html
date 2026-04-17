@@ -344,6 +344,23 @@
     @media (max-width: 480px) {
       #nav-dots { display: none; }
     }
+
+    /* ── PRINT / PDF ── */
+    @media print {
+      html, body { overflow: visible; height: auto; }
+      #deck { overflow: visible; height: auto; scroll-snap-type: none; }
+      #nav-dots { display: none; }
+      .slide-num { display: none; }
+      .slide {
+        min-height: 100vh;
+        page-break-after: always;
+        break-after: page;
+        scroll-snap-align: none;
+        overflow: visible;
+      }
+      .r { opacity: 1 !important; transform: none !important; }
+      .bg-blob::after { display: none; }
+    }
   </style>
 </head>
 <body>
